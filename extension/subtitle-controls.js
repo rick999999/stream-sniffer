@@ -1,17 +1,20 @@
 (() => {
-  // HLS subtitle tracks are exposed by hls.js, not Chrome's native control UI. Always show the
-  // CC button while a stream is playing; if the HLS manifest has no tracks, explain that in-menu.
+  // HLS subtitle tracks are controlled by hls.js. Also expose TextTracks already attached to the
+  // video, since some sources expose their captions natively rather than through the HLS manifest.
   const wrap = document.getElementById('cc-wrap');
   const button = document.getElementById('cc');
   const menu = document.getElementById('cc-menu');
   if (!wrap || !button || !menu) return;
 
-  const SETTINGS_KEY = 'subtitleStyle';
-  const defaults = {
+  const STYLE_KEY = 'subtitleStyle';
+  const ALWAYS_KEY = 'subtitleAlwaysShow';
+  const styleDefaults = {
     font: 'system-ui, sans-serif', size: 100, color: '#ffffff', background: '#000000',
     backgroundOpacity: 75, bold: false, italic: false,
   };
-  let style = { ...defaults };
+  let style = { ...styleDefaults };
+  let alwaysShow = true;
+  let menuOpen = false;
   const attached = new WeakSet();
   wrap.hidden = true;
   menu.hidden = true;
@@ -19,7 +22,11 @@
 
   const playerStreams = () => (typeof streams === 'undefined' ? [] : streams);
   const current = () => playerStreams()[0];
-  const tracksFor = (stream) => stream?.hls?.subtitleTracks ?? [];
+  const hlsTracks = (stream) => stream?.hls?.subtitleTracks ?? [];
+  const nativeTracks = (stream) => {
+    if (!stream?.video?.textTracks) return [];
+    return Array.from(stream.video.textTracks).filter((track) => ['subtitles', 'captions'].includes(track.kind));
+  };
   const applyStyle = () => {
     const opacity = Math.max(0, Math.min(100, Number(style.backgroundOpacity))) / 100;
     const background = style.background || '#000000';
@@ -34,29 +41,67 @@
     }
   };
 
-  chrome.storage.local.get(SETTINGS_KEY).then((saved) => {
-    style = { ...defaults, ...(saved[SETTINGS_KEY] || {}) };
+  chrome.storage.local.get([STYLE_KEY, ALWAYS_KEY]).then((saved) => {
+    style = { ...styleDefaults, ...(saved[STYLE_KEY] || {}) };
+    alwaysShow = saved[ALWAYS_KEY] !== false;
     applyStyle();
     render();
-  }).catch((err) => console.warn('[stream-sniffer] could not load subtitle appearance:', err));
+    if (alwaysShow) enableAvailableSubtitles(current());
+  }).catch((err) => console.warn('[stream-sniffer] could not load subtitle settings:', err));
 
+  function persist(key, value) {
+    chrome.storage.local.set({ [key]: value }).catch((err) => console.warn(`[stream-sniffer] could not save ${key}:`, err));
+  }
   function saveStyle() {
     applyStyle();
-    chrome.storage.local.set({ [SETTINGS_KEY]: style }).catch((err) => {
-      console.warn('[stream-sniffer] could not save subtitle appearance:', err);
-    });
+    persist(STYLE_KEY, style);
   }
-
-  // Preserve the labels and language tags advertised by the stream; don't prefer or translate any language.
+  // Keep the text exactly as the playlist/track provides it; do not translate or prefer a language.
   function trackName(track, index) {
-    return String(track?.name || track?.lang || track?.title || `Subtitle ${index + 1}`).trim() || `Subtitle ${index + 1}`;
+    return String(track?.name || track?.lang || track?.label || track?.title || `Subtitle ${index + 1}`).trim() || `Subtitle ${index + 1}`;
   }
 
-  function selectTrack(index) {
+  function setNativeTrack(stream, selectedTrack) {
+    for (const track of nativeTracks(stream)) {
+      track.mode = track === selectedTrack ? 'showing' : 'disabled';
+    }
+  }
+
+  function enableAvailableSubtitles(stream) {
+    if (!stream?.hls) return;
+    const hls = stream.hls;
+    const hs = hlsTracks(stream);
+    const ns = nativeTracks(stream);
+    if (hs.length) {
+      // Preserve an explicit user choice; if none is active yet, use the playlist's first track.
+      if (hls.subtitleTrack < 0) hls.subtitleTrack = 0;
+      hls.subtitleDisplay = true;
+      setNativeTrack(stream, null);
+    } else if (ns.length) {
+      setNativeTrack(stream, ns.find((track) => track.mode === 'showing') || ns[0]);
+    }
+  }
+
+  function selectHlsTrack(index) {
     const stream = current();
     if (!stream?.hls) return;
+    setNativeTrack(stream, null);
     stream.hls.subtitleDisplay = true;
     stream.hls.subtitleTrack = index;
+    render();
+  }
+  function selectNativeTrack(track) {
+    const stream = current();
+    if (!stream?.hls) return;
+    stream.hls.subtitleTrack = -1;
+    setNativeTrack(stream, track);
+    render();
+  }
+  function turnOffSubtitles() {
+    const stream = current();
+    if (!stream?.hls) return;
+    stream.hls.subtitleTrack = -1;
+    setNativeTrack(stream, null);
     render();
   }
 
@@ -102,20 +147,25 @@
 
   function buildMenu() {
     const stream = current();
-    const tracks = tracksFor(stream);
-    const selected = stream?.hls?.subtitleTrack ?? -1;
+    const hs = hlsTracks(stream);
+    const ns = nativeTracks(stream);
+    const selectedHls = stream?.hls?.subtitleTrack ?? -1;
+    const activeNative = ns.find((track) => track.mode === 'showing');
     const trackList = document.createElement('div');
     trackList.className = 'cc-tracks';
-    if (!tracks.length) {
+
+    trackList.append(menuButton('Off', selectedHls < 0 && !activeNative, turnOffSubtitles));
+    hs.forEach((track, index) => {
+      trackList.append(menuButton(trackName(track, index), selectedHls === index, () => selectHlsTrack(index), track?.lang || ''));
+    });
+    ns.forEach((track, index) => {
+      trackList.append(menuButton(trackName(track, index), activeNative === track, () => selectNativeTrack(track), track.language || ''));
+    });
+    if (!hs.length && !ns.length) {
       const empty = document.createElement('div');
       empty.className = 'cc-empty';
-      empty.textContent = 'No subtitle tracks are listed in this HLS stream.';
+      empty.textContent = 'No subtitle tracks are currently exposed by this stream. If the original site has separate captions, they are not included in the captured stream.';
       trackList.append(empty);
-    } else {
-      trackList.append(menuButton('Off', selected < 0, () => selectTrack(-1)));
-      tracks.forEach((track, index) => {
-        trackList.append(menuButton(trackName(track, index), selected === index, () => selectTrack(index), track?.lang || ''));
-      });
     }
 
     const stylePanel = document.createElement('section');
@@ -123,6 +173,18 @@
     const heading = document.createElement('h3');
     heading.textContent = 'Subtitle appearance';
     stylePanel.append(heading);
+
+    const always = document.createElement('input');
+    always.type = 'checkbox';
+    always.checked = alwaysShow;
+    always.addEventListener('change', () => {
+      alwaysShow = always.checked;
+      persist(ALWAYS_KEY, alwaysShow);
+      if (alwaysShow) enableAvailableSubtitles(current());
+      else turnOffSubtitles();
+      render();
+    });
+    stylePanel.append(makeLabel('Always show subtitles when available', always));
 
     const font = makeSelect([
       ['System sans-serif', 'system-ui, sans-serif'], ['Arial', 'Arial, sans-serif'],
@@ -157,58 +219,72 @@
     stylePanel.append(makeLabel('Italic', italic));
     const reset = document.createElement('button');
     reset.type = 'button'; reset.textContent = 'Reset appearance';
-    reset.addEventListener('click', () => { style = { ...defaults }; saveStyle(); buildMenu(); });
+    reset.addEventListener('click', () => { style = { ...styleDefaults }; saveStyle(); buildMenu(); });
     stylePanel.append(reset);
     menu.replaceChildren(trackList, stylePanel);
   }
 
   function render() {
     const stream = current();
-    // Don't hide CC just because subtitleTracks hasn't loaded yet or the playlist lacks tracks.
+    // Always offer the control while a stream is playing, including before track discovery.
     wrap.hidden = !stream?.hls || !!stream.casting;
     if (wrap.hidden) {
       menu.hidden = true;
       button.setAttribute('aria-expanded', 'false');
       return;
     }
-    const tracks = tracksFor(stream);
+    const hs = hlsTracks(stream);
+    const ns = nativeTracks(stream);
     const selected = stream.hls.subtitleTrack ?? -1;
-    button.dataset.active = String(selected >= 0);
-    button.title = selected >= 0 && tracks[selected]
-      ? `Subtitles: ${trackName(tracks[selected], selected)}`
-      : tracks.length ? 'Subtitles: Off' : 'Subtitles (track availability shown in menu)';
+    const selectedNative = ns.find((track) => track.mode === 'showing');
+    button.dataset.active = String(selected >= 0 || !!selectedNative);
+    const selectedTrack = selected >= 0 && hs[selected] ? hs[selected] : selectedNative;
+    button.title = selectedTrack ? `Subtitles: ${trackName(selectedTrack, Math.max(0, hs.indexOf(selectedTrack)))}` : 'Subtitles';
     button.setAttribute('aria-label', button.title);
     if (!menu.hidden) buildMenu();
   }
 
   button.addEventListener('click', () => {
     if (wrap.hidden) return;
-    menu.hidden = !menu.hidden;
-    button.setAttribute('aria-expanded', String(!menu.hidden));
-    if (!menu.hidden) buildMenu();
+    menuOpen = !menuOpen;
+    menu.hidden = !menuOpen;
+    button.setAttribute('aria-expanded', String(menuOpen));
+    if (menuOpen) buildMenu();
   });
   addEventListener('pointerdown', (event) => {
     if (!wrap.contains(event.target)) {
+      menuOpen = false;
       menu.hidden = true;
       button.setAttribute('aria-expanded', 'false');
     }
   });
   addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !menu.hidden) {
+    if (event.key === 'Escape' && menuOpen) {
+      menuOpen = false;
       menu.hidden = true;
       button.setAttribute('aria-expanded', 'false');
     }
   });
 
-  // StartStream creates Hls instances dynamically; attach to track events and poll only for current
-  // player state transitions. The CC control is available even before track discovery completes.
   setInterval(() => {
     for (const stream of playerStreams()) {
       const hls = stream.hls;
       if (!hls || attached.has(hls)) continue;
       attached.add(hls);
       for (const event of [Hls.Events.SUBTITLE_TRACKS_UPDATED, Hls.Events.SUBTITLE_TRACK_SWITCH, Hls.Events.SUBTITLE_TRACK_LOADED]) {
-        if (event) hls.on(event, () => stream === current() && render());
+        if (event) hls.on(event, () => {
+          if (alwaysShow) enableAvailableSubtitles(stream);
+          if (stream === current()) render();
+        });
+      }
+      stream.video.textTracks?.addEventListener?.('addtrack', () => {
+        if (alwaysShow) enableAvailableSubtitles(stream);
+        if (stream === current()) render();
+      });
+    }
+    if (alwaysShow) {
+      for (const stream of playerStreams()) {
+        if (stream.hls && stream === current()) enableAvailableSubtitles(stream);
       }
     }
     render();
