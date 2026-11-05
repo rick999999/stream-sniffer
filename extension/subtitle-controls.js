@@ -1,6 +1,6 @@
 (() => {
-  // HLS subtitle tracks are exposed by hls.js, not by Chrome's native control UI. This CC menu
-  // selects those tracks and styles the browser-rendered TextTrack cues with ::cue.
+  // HLS subtitle tracks are exposed by hls.js, not Chrome's native control UI. Always show the
+  // CC button while a stream is playing; if the HLS manifest has no tracks, explain that in-menu.
   const wrap = document.getElementById('cc-wrap');
   const button = document.getElementById('cc');
   const menu = document.getElementById('cc-menu');
@@ -8,16 +8,10 @@
 
   const SETTINGS_KEY = 'subtitleStyle';
   const defaults = {
-    font: 'system-ui, sans-serif',
-    size: 100,
-    color: '#ffffff',
-    background: '#000000',
-    backgroundOpacity: 75,
-    bold: false,
-    italic: false,
+    font: 'system-ui, sans-serif', size: 100, color: '#ffffff', background: '#000000',
+    backgroundOpacity: 75, bold: false, italic: false,
   };
   let style = { ...defaults };
-  let styleLoaded = false;
   const attached = new WeakSet();
   wrap.hidden = true;
   menu.hidden = true;
@@ -42,7 +36,6 @@
 
   chrome.storage.local.get(SETTINGS_KEY).then((saved) => {
     style = { ...defaults, ...(saved[SETTINGS_KEY] || {}) };
-    styleLoaded = true;
     applyStyle();
     render();
   }).catch((err) => console.warn('[stream-sniffer] could not load subtitle appearance:', err));
@@ -54,16 +47,14 @@
     });
   }
 
+  // Preserve the labels and language tags advertised by the stream; don't prefer or translate any language.
   function trackName(track, index) {
-    const name = String(track?.name || track?.lang || track?.title || `Subtitle ${index + 1}`).trim();
-    return name || `Subtitle ${index + 1}`;
+    return String(track?.name || track?.lang || track?.title || `Subtitle ${index + 1}`).trim() || `Subtitle ${index + 1}`;
   }
 
   function selectTrack(index) {
     const stream = current();
     if (!stream?.hls) return;
-    // This is the actual hls.js API that enables/disables its subtitle rendering. Chrome's
-    // built-in CC button cannot control HLS tracks attached through Media Source Extensions.
     stream.hls.subtitleDisplay = true;
     stream.hls.subtitleTrack = index;
     render();
@@ -118,7 +109,7 @@
     if (!tracks.length) {
       const empty = document.createElement('div');
       empty.className = 'cc-empty';
-      empty.textContent = 'This stream does not provide selectable HLS subtitles.';
+      empty.textContent = 'No subtitle tracks are listed in this HLS stream.';
       trackList.append(empty);
     } else {
       trackList.append(menuButton('Off', selected < 0, () => selectTrack(-1)));
@@ -134,84 +125,58 @@
     stylePanel.append(heading);
 
     const font = makeSelect([
-      ['System sans-serif', 'system-ui, sans-serif'],
-      ['Arial', 'Arial, sans-serif'],
-      ['Serif', 'Georgia, serif'],
-      ['Monospace', 'monospace'],
+      ['System sans-serif', 'system-ui, sans-serif'], ['Arial', 'Arial, sans-serif'],
+      ['Serif', 'Georgia, serif'], ['Monospace', 'monospace'],
     ], style.font, (value) => { style.font = value; saveStyle(); });
     stylePanel.append(makeLabel('Font', font));
-
     const size = makeSelect([['75%', 75], ['90%', 90], ['100%', 100], ['125%', 125], ['150%', 150], ['175%', 175]], style.size, (value) => {
-      style.size = Number(value);
-      saveStyle();
+      style.size = Number(value); saveStyle();
     });
     stylePanel.append(makeLabel('Font size', size));
 
     const color = document.createElement('input');
-    color.type = 'color';
-    color.value = style.color;
-    color.setAttribute('aria-label', 'Subtitle text color');
+    color.type = 'color'; color.value = style.color; color.setAttribute('aria-label', 'Subtitle text color');
     color.addEventListener('input', () => { style.color = color.value; saveStyle(); });
     stylePanel.append(makeLabel('Text color', color));
-
     const background = document.createElement('input');
-    background.type = 'color';
-    background.value = style.background;
-    background.setAttribute('aria-label', 'Subtitle background color');
+    background.type = 'color'; background.value = style.background; background.setAttribute('aria-label', 'Subtitle background color');
     background.addEventListener('input', () => { style.background = background.value; saveStyle(); });
     stylePanel.append(makeLabel('Background', background));
-
     const opacity = document.createElement('input');
-    opacity.type = 'range';
-    opacity.min = '0';
-    opacity.max = '100';
-    opacity.step = '5';
-    opacity.value = String(style.backgroundOpacity);
-    opacity.setAttribute('aria-label', 'Subtitle background opacity');
+    opacity.type = 'range'; opacity.min = '0'; opacity.max = '100'; opacity.step = '5';
+    opacity.value = String(style.backgroundOpacity); opacity.setAttribute('aria-label', 'Subtitle background opacity');
     opacity.addEventListener('input', () => { style.backgroundOpacity = Number(opacity.value); saveStyle(); });
     stylePanel.append(makeLabel('Background opacity', opacity));
-
     const bold = document.createElement('input');
-    bold.type = 'checkbox';
-    bold.checked = !!style.bold;
+    bold.type = 'checkbox'; bold.checked = !!style.bold;
     bold.addEventListener('change', () => { style.bold = bold.checked; saveStyle(); });
     stylePanel.append(makeLabel('Bold', bold));
-
     const italic = document.createElement('input');
-    italic.type = 'checkbox';
-    italic.checked = !!style.italic;
+    italic.type = 'checkbox'; italic.checked = !!style.italic;
     italic.addEventListener('change', () => { style.italic = italic.checked; saveStyle(); });
     stylePanel.append(makeLabel('Italic', italic));
-
     const reset = document.createElement('button');
-    reset.type = 'button';
-    reset.textContent = 'Reset appearance';
-    reset.addEventListener('click', () => {
-      style = { ...defaults };
-      saveStyle();
-      render();
-      if (!menu.hidden) buildMenuVisible();
-    });
+    reset.type = 'button'; reset.textContent = 'Reset appearance';
+    reset.addEventListener('click', () => { style = { ...defaults }; saveStyle(); buildMenu(); });
     stylePanel.append(reset);
     menu.replaceChildren(trackList, stylePanel);
   }
 
-  function buildMenuVisible() {
-    buildMenu();
-  }
-
   function render() {
     const stream = current();
-    const tracks = tracksFor(stream);
-    wrap.hidden = !stream?.hls || tracks.length === 0;
+    // Don't hide CC just because subtitleTracks hasn't loaded yet or the playlist lacks tracks.
+    wrap.hidden = !stream?.hls || !!stream.casting;
     if (wrap.hidden) {
       menu.hidden = true;
       button.setAttribute('aria-expanded', 'false');
       return;
     }
+    const tracks = tracksFor(stream);
     const selected = stream.hls.subtitleTrack ?? -1;
     button.dataset.active = String(selected >= 0);
-    button.title = selected >= 0 ? `Subtitles: ${trackName(tracks[selected], selected)}` : 'Subtitles: Off';
+    button.title = selected >= 0 && tracks[selected]
+      ? `Subtitles: ${trackName(tracks[selected], selected)}`
+      : tracks.length ? 'Subtitles: Off' : 'Subtitles (track availability shown in menu)';
     button.setAttribute('aria-label', button.title);
     if (!menu.hidden) buildMenu();
   }
@@ -235,8 +200,8 @@
     }
   });
 
-  // startStream creates a new hls.js instance for each capture/retry. Polling lets this add-on
-  // observe each instance without modifying the large player controller or its stream lifecycle.
+  // StartStream creates Hls instances dynamically; attach to track events and poll only for current
+  // player state transitions. The CC control is available even before track discovery completes.
   setInterval(() => {
     for (const stream of playerStreams()) {
       const hls = stream.hls;
@@ -246,11 +211,9 @@
         if (event) hls.on(event, () => stream === current() && render());
       }
     }
-    if (!styleLoaded) return;
     render();
   }, 300);
 
-  // Apply defaults immediately so captions have readable contrast even while storage is loading.
   applyStyle();
   render();
 })();
