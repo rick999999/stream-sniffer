@@ -1,0 +1,262 @@
+Build configuration: [sf] [libui] [libgui]
+Sync configuration: [using: EGL_ANDROID_native_fence_sync]
+DispSync configuration: app phase -5500000 ns, sf phase 0 ns, present offset 0 ns (refresh 16666666 ns)
+
+Static screen stats:
+  < 1 frames: 33.259 s (1.1%)
+  < 2 frames: 346.948 s (11.0%)
+  < 3 frames: 241.508 s (7.7%)
+  < 4 frames: 47.415 s (1.5%)
+  < 5 frames: 9.920 s (0.3%)
+  < 6 frames: 9.213 s (0.3%)
+  < 7 frames: 6.331 s (0.2%)
+  7+ frames: 2458.506 s (78.0%)
+
+Visible layers (count = 9)
++ Layer 0xf485e000 (com.android.systemui.ImageWallpaper)
+  Region transparentRegion (this=0xf485e170, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0xf485e008, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0xf485e044, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    21000, pos=(0,0), size=(1920,1080), crop=(   0,  36,1920,1080), isOpaque=1, invalidate=0, alpha=0xff, flags=0x00000003, tr=[1.00, 0.00][0.00, 1.00]
+      client=0xf6cdb280
+      format= 2, activeBuffer=[1920x1080:1920,  2], queued-frames=0, mRefreshPending=0
+            mTexName=10 mCurrentTexture=0
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1920x1080], default-format=2, transform-hint=00, FIFO(0)={}
+            >[00:0xf499ee80] state=ACQUIRED, 0xf499ef20 [1920x1080:1920,  2]
++ LayerDim 0xf6b88c00 (DimLayer)
+  Region transparentRegion (this=0xf6b88d70, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0xf6b88c08, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0xf6b88c44, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    21014, pos=(-480,-270), size=(2880,1620), crop=(   0,   0,  -1,  -1), isOpaque=0, invalidate=0, alpha=0x00, flags=0x00000001, tr=[1.00, 0.00][0.00, 1.00]
+      client=0xf7009cc0
+      format= 0, activeBuffer=[   0x   0:   0,  0], queued-frames=0, mRefreshPending=0
+            mTexName=5 mCurrentTexture=-1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[2880x1620], default-format=1, transform-hint=00, FIFO(0)={}
++ Layer 0xf485f400 (SurfaceView)
+  Region transparentRegion (this=0xf485f570, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0xf485f408, count=1)
+    [ 12,  45, 1908, 240]
+  Region surfaceDamageRegion (this=0xf485f444, count=1)
+    [  0,   0,  -1,  -1]
+      layerStack=   0, z=    21015, pos=(12,45), size=(1896, 195), crop=(   0,   0,1896, 195), isOpaque=1, invalidate=0, alpha=0xff, flags=0x00000002, tr=[1.00, 0.00][0.00, 1.00]
+      client=0xf6cdb400
+      format= 4, activeBuffer=[1920x1088:1920, 11], queued-frames=0, mRefreshPending=0
+            mTexName=6 mCurrentTexture=1
+            mCurrentCrop=[0,0,768,432] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1896x195], default-format=4, transform-hint=00, FIFO(0)={}
+             [00:0xf2b0a840] state=FREE    , 0xf2b0a8e0 [1920x1088:1920, 11]
+            >[01:0xf2b0a700] state=ACQUIRED, 0xf2b0a7a0 [1920x1088:1920, 11]
+             [02:0xf2b0a200] state=DEQUEUED, 0xf2b0a2a0 [1920x1088:1920, 11]
+             [03:0xf2b0a980] state=DEQUEUED, 0xf6ce90a0 [1920x1088:1920, 11]
+             [04:0xf6ce9b40] state=DEQUEUED, 0xf6ce9000 [1920x1088:1920, 11]
+             [05:0xf2b070a0] state=DEQUEUED, 0xf2b078c0 [1920x1088:1920, 11]
++ LayerDim 0xf6b87800 (DimLayer)
+  Region transparentRegion (this=0xf6b87970, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0xf6b87808, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0xf6b87844, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    21019, pos=(-480,-270), size=(2880,1620), crop=(   0,   0,  -1,  -1), isOpaque=0, invalidate=0, alpha=0x00, flags=0x00000001, tr=[1.00, 0.00][0.00, 1.00]
+      client=0xf7009cc0
+      format= 0, activeBuffer=[   0x   0:   0,  0], queued-frames=0, mRefreshPending=0
+            mTexName=4 mCurrentTexture=-1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[2880x1620], default-format=1, transform-hint=00, FIFO(0)={}
++ Layer 0xf4861c00 (com.example.mediaplayercctest/com.example.mediaplayercctest.MainActivity)
+  Region transparentRegion (this=0xf4861d70, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0xf4861c08, count=1)
+    [  0,  36, 1920, 1080]
+  Region surfaceDamageRegion (this=0xf4861c44, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    21020, pos=(0,0), size=(1920,1080), crop=(   0,  36,1920,1080), isOpaque=0, invalidate=0, alpha=0xff, flags=0x00000000, tr=[1.00, 0.00][0.00, 1.00]
+      client=0xf6cdb400
+      format= 1, activeBuffer=[1920x1080:1920,  1], queued-frames=0, mRefreshPending=0
+            mTexName=2 mCurrentTexture=1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1920x1080], default-format=1, transform-hint=00, FIFO(0)={}
+             [00:0xf2b07640] state=FREE    , 0xf2b09260 [1920x1080:1920,  1]
+            >[01:0xf2b07c80] state=ACQUIRED, 0xf2b08360 [1920x1080:1920,  1]
+             [02:0xf2b09b20] state=FREE    , 0xf2b09c60 [1920x1080:1920,  1]
++ Layer 0xf6b86400 (FocusedStackFrame)
+  Region transparentRegion (this=0xf6b86570, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0xf6b86408, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0xf6b86444, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    21021, pos=(0,0), size=(   1,   1), crop=(   0,   0,  -1,  -1), isOpaque=0, invalidate=0, alpha=0x4d, flags=0x00000001, tr=[1.00, 0.00][0.00, 1.00]
+      client=0xf7009cc0
+      format= 1, activeBuffer=[   0x   0:   0,  0], queued-frames=0, mRefreshPending=0
+            mTexName=3 mCurrentTexture=-1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1x1], default-format=1, transform-hint=00, FIFO(0)={}
++ Layer 0xf4860800 (InputMethod)
+  Region transparentRegion (this=0xf4860970, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0xf4860808, count=1)
+    [  0, 629, 1920, 1080]
+  Region surfaceDamageRegion (this=0xf4860844, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=    21025, pos=(0,629), size=(1920, 451), crop=(   0,   0,1920, 451), isOpaque=0, invalidate=0, alpha=0xff, flags=0x00000000, tr=[1.00, 0.00][0.00, 1.00]
+      client=0xf49831c0
+      format= 1, activeBuffer=[1920x 451:1920,  1], queued-frames=0, mRefreshPending=0
+            mTexName=9 mCurrentTexture=0
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1920x451], default-format=1, transform-hint=00, FIFO(0)={}
+            >[00:0xf6cea5e0] state=ACQUIRED, 0xf2b075a0 [1920x 451:1920,  1]
++ Layer 0xf6816400 (StatusBar)
+  Region transparentRegion (this=0xf6816570, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0xf6816408, count=1)
+    [  0,   0, 1920,  36]
+  Region surfaceDamageRegion (this=0xf6816444, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=   161000, pos=(0,0), size=(1920,  36), crop=(   0,   0,1920,  36), isOpaque=0, invalidate=0, alpha=0xff, flags=0x00000000, tr=[1.00, 0.00][0.00, 1.00]
+      client=0xf6cdb280
+      format= 1, activeBuffer=[1920x  36:1920,  1], queued-frames=0, mRefreshPending=0
+            mTexName=7 mCurrentTexture=1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1920x36], default-format=1, transform-hint=00, FIFO(0)={}
+             [00:0xf6ce9640] state=FREE    , 0xf6ce96e0 [1920x  36:1920,  1]
+            >[01:0xf499f600] state=ACQUIRED, 0xf499f6a0 [1920x  36:1920,  1]
+             [02:0xf6ce9820] state=FREE    , 0xf6ce98c0 [1920x  36:1920,  1]
++ Layer 0xf6817800 (NavigationBar)
+  Region transparentRegion (this=0xf6817970, count=1)
+    [  0,   0,   0,   0]
+  Region visibleRegion (this=0xf6817808, count=1)
+    [  0,   0,   0,   0]
+  Region surfaceDamageRegion (this=0xf6817844, count=1)
+    [  0,   0,   0,   0]
+      layerStack=   0, z=   211000, pos=(0,1008), size=(1920,  72), crop=(   0,   0,1920,  72), isOpaque=0, invalidate=0, alpha=0xff, flags=0x00000001, tr=[1.00, 0.00][0.00, 1.00]
+      client=0xf6cdb280
+      format= 1, activeBuffer=[1920x  72:1920,  1], queued-frames=0, mRefreshPending=0
+            mTexName=8 mCurrentTexture=1
+            mCurrentCrop=[0,0,0,0] mCurrentTransform=0
+            mAbandoned=0
+            -BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1920x72], default-format=1, transform-hint=00, FIFO(0)={}
+             [00:0xf499f4c0] state=FREE    , 0xf499f560 [1920x  72:1920,  1]
+            >[01:0xf6ce9140] state=ACQUIRED, 0xf6ce9780 [1920x  72:1920,  1]
+             [02:0xf6ce9960] state=FREE    , 0xf6ce9a00 [1920x  72:1920,  1]
+Displays (2 entries)
++ DisplayDevice: scrcpy
+   type=2, hwcId=2, layerStack=0, (1920x1080), ANativeWindow=0xf4985708, screenorientation = 0, orient= 0 (type=00000000), flips=23123, isSecure=1, secureVis=0, powerMode=2, activeConfig=0, numLayers=4
+   v:[0,0,1920,1080], f:[0,0,1920,1080], s:[0,0,1920,1080],transform:[[1.000,0.000,-0.000][0.000,1.000,-0.000][0.000,0.000,1.000]]
++ DisplayDevice: Built-in Screen
+   type=0, hwcId=0, layerStack=0, (1920x1080), ANativeWindow=0xf4985008, screenorientation = 0, orient= 0 (type=00000000), flips=25637, isSecure=1, secureVis=0, powerMode=2, activeConfig=0, numLayers=4
+   v:[0,0,1920,1080], f:[0,0,1920,1080], s:[0,0,1920,1080],transform:[[1.000,0.000,-0.000][0.000,1.000,-0.000][0.000,0.000,1.000]]
+mAbandoned=0
+-BufferQueue mMaxAcquiredBufferCount=1, mDequeueBufferCannotBlock=0, default-size=[1920x1080], default-format=1, transform-hint=00, FIFO(0)={}
+ [00:0xf6ba0e60] state=FREE    , 0xf6ba10e0 [1920x1080:1920,  1]
+>[01:0xf499d800] state=ACQUIRED, 0xf499d8a0 [1920x1080:1920,  1]
+ [02:0xf499df80] state=FREE    , 0xf499e020 [1920x1080:1920,  1]
+SurfaceFlinger global state:
+EGL implementation : 1.4 Linux-r6p1-01rel0
+EGL_KHR_image EGL_KHR_image_base EGL_KHR_image_pixmap EGL_KHR_gl_texture_2D_image EGL_KHR_gl_texture_cubemap_image EGL_KHR_gl_renderbuffer_image EGL_KHR_fence_sync EGL_KHR_swap_buffers_with_damage EGL_EXT_swap_buffers_with_damage EGL_ANDROID_image_native_buffer EGL_ANDROID_recordable EGL_ANDROID_native_fence_sync EGL_ANDROID_framebuffer_target EGL_EXT_create_context_robustness EGL_ANDROID_blob_cache EGL_KHR_create_context EGL_KHR_partial_update EGL_EXT_protected_surface EGL_KHR_create_context_no_error 
+GLES: ARM, Mali-450 MP, OpenGL ES 2.0
+GL_EXT_debug_marker GL_OES_texture_npot GL_OES_vertex_array_object GL_OES_compressed_ETC1_RGB8_texture GL_EXT_compressed_ETC1_RGB8_sub_texture GL_OES_standard_derivatives GL_OES_EGL_image GL_OES_depth24 GL_ARM_rgba8 GL_ARM_mali_shader_binary GL_OES_depth_texture GL_OES_packed_depth_stencil GL_EXT_texture_format_BGRA8888 GL_OES_vertex_half_float GL_EXT_blend_minmax GL_OES_EGL_image_external GL_OES_EGL_sync GL_OES_rgb8_rgba8 GL_EXT_multisampled_render_to_texture GL_EXT_discard_framebuffer GL_OES_get_program_binary GL_ARM_mali_program_binary GL_EXT_shader_texture_lod GL_EXT_robustness GL_OES_depth_texture_cube_map GL_KHR_debug GL_ARM_shader_framebuffer_fetch GL_ARM_shader_framebuffer_fetch_depth_stencil GL_OES_mapbuffer GL_KHR_no_error
+  Region undefinedRegion (this=0xf6bb73ec, count=4)
+    [  0,   0, 1920,  45]
+    [  0,  45,  12, 240]
+    [1908,  45, 1920, 240]
+    [  0, 240, 1920, 1080]
+  orientation=0, isDisplayOn=1
+  last eglSwapBuffers() time: 758.125000 us
+  last transaction time     : 749.041000 us
+  transaction-flags         : 00000000
+  refresh-rate              : 60.000002 fps
+  x-dpi                     : 159.895004
+  y-dpi                     : 160.421005
+  gpu_to_cpu_unsupported    : 0
+  eglSwapBuffers time: 0.000000 us
+  transaction time: 0.000000 us
+VSYNC state: disabled
+  soft-vsync: disabled
+  numListeners=19,
+  events-delivered: 20193
+    0xf6cdc028: count=-1
+    0xf6cdc078: count=-1
+    0xf6cdc0a0: count=-1
+    0xf6cdc0c8: count=-1
+    0xf6cdc0f0: count=-1
+    0xf6cdc140: count=-1
+    0xf701f578: count=-1
+    0xf701f5a0: count=-1
+    0xf701fb40: count=-1
+    0xf701fb90: count=-1
+    0xf701fd48: count=-1
+    0xf701fdc0: count=-1
+    0xf701fde8: count=-1
+    0xf701fe38: count=-1
+    0xf70201a8: count=-1
+    0xf70203b0: count=-1
+    0xf70203d8: count=-1
+    0xf7020478: count=-1
+    0xf7020770: count=-1
+h/w composer state:
+  h/w composer present and enabled
+Hardware Composer state (version 01040000):
+  mDebugForceFakeVSync=0
+  Display[0] configurations (* current):
+    * 0: 1920x1080, xdpi=159.895004, ydpi=160.421005, refresh=16666666, colorTransform=-22
+  numHwLayers=5, flags=00000000
+    type   |  handle  | hint | flag | tr | blnd |   format    |     source crop (l,t,r,b)      |          frame         | name 
+-----------+----------+------+------+----+------+-------------+--------------------------------+------------------------+------
+      GLES | f2b0a7a0 | 0004 | 0000 | 00 | 0100 | ? 00000011  |    0.0,    0.0,  768.0,  432.0 |   12,   45, 1908,  240 | SurfaceView
+      GLES | f2b08360 | 0000 | 0000 | 00 | 0105 | RGBA_8888   |    0.0,   36.0, 1920.0, 1080.0 |    0,   36, 1920, 1080 | com.example.mediaplayercctest/com.example.mediaplayercctest.MainActivity
+      GLES | f2b075a0 | 0000 | 0000 | 00 | 0105 | RGBA_8888   |    0.0,    0.0, 1920.0,  451.0 |    0,  629, 1920, 1080 | InputMethod
+      GLES | f499f6a0 | 0000 | 0000 | 00 | 0105 | RGBA_8888   |    0.0,    0.0, 1920.0,   36.0 |    0,    0, 1920,   36 | StatusBar
+ FB TARGET | f499d8a0 | 0000 | 0000 | 00 | 0105 | RGBA_8888   |    0.0,    0.0, 1920.0, 1080.0 |    0,    0, 1920, 1080 | HWC_FRAMEBUFFER_TARGET
+  Display[2] configurations (* current):
+    * 0: 1920x1080, xdpi=320.000000, ydpi=320.000000, refresh=0, colorTransform=-150884288
+  numHwLayers=5, flags=00000000
+    type   |  handle  | hint | flag | tr | blnd |   format    |     source crop (l,t,r,b)      |          frame         | name 
+-----------+----------+------+------+----+------+-------------+--------------------------------+------------------------+------
+      GLES | f2b0a7a0 | 0004 | 0000 | 00 | 0100 | ? 00000011  |    0.0,    0.0,  768.0,  432.0 |   12,   45, 1908,  240 | SurfaceView
+      GLES | f2b08360 | 0000 | 0000 | 00 | 0105 | RGBA_8888   |    0.0,   36.0, 1920.0, 1080.0 |    0,   36, 1920, 1080 | com.example.mediaplayercctest/com.example.mediaplayercctest.MainActivity
+      GLES | f2b075a0 | 0000 | 0000 | 00 | 0105 | RGBA_8888   |    0.0,    0.0, 1920.0,  451.0 |    0,  629, 1920, 1080 | InputMethod
+      GLES | f499f6a0 | 0000 | 0000 | 00 | 0105 | RGBA_8888   |    0.0,    0.0, 1920.0,   36.0 |    0,    0, 1920,   36 | StatusBar
+ FB TARGET | f2b08220 | 0000 | 0000 | 00 | 0105 | RGBA_8888   |    0.0,    0.0, 1920.0, 1080.0 |    0,    0, 1920, 1080 | HWC_FRAMEBUFFER_TARGET
+  Primiary Display connected: Yes
+    w=1920, h=1080, xdpi=159.895081, ydpi=160.421051, osdIdx=0, vsync_period=16666666, video_buf_used: 
+
+Allocated buffers:
+0xf2b075a0: 3382.50 KiB | 1920 (1920) x  451 |        1 | 0x00000933
+0xf2b078c0: unknown     | 1920 (1920) x 1088 |       11 | 0x02002900
+0xf2b08360: 8100.00 KiB | 1920 (1920) x 1080 |        1 | 0x00000f02
+0xf2b09260: 8100.00 KiB | 1920 (1920) x 1080 |        1 | 0x00000f02
+0xf2b09c60: 8100.00 KiB | 1920 (1920) x 1080 |        1 | 0x00000f02
+0xf2b0a2a0: unknown     | 1920 (1920) x 1088 |       11 | 0x02002900
+0xf2b0a7a0: unknown     | 1920 (1920) x 1088 |       11 | 0x02002900
+0xf2b0a8e0: unknown     | 1920 (1920) x 1088 |       11 | 0x02002900
+0xf499d8a0: 8100.00 KiB | 1920 (1920) x 1080 |        1 | 0x00001e02
+0xf499e020: 8100.00 KiB | 1920 (1920) x 1080 |        1 | 0x00001e02
+0xf499ef20: 8100.00 KiB | 1920 (1920) x 1080 |        2 | 0x00000933
+0xf499f560:  540.00 KiB | 1920 (1920) x   72 |        1 | 0x00000933
+0xf499f6a0:  270.00 KiB | 1920 (1920) x   36 |        1 | 0x00000933
+0xf6ba10e0: 8100.00 KiB | 1920 (1920) x 1080 |        1 | 0x00001e02
+0xf6ce9000: unknown     | 1920 (1920) x 1088 |       11 | 0x02002900
+0xf6ce90a0: unknown     | 1920 (1920) x 1088 |       11 | 0x02002900
+0xf6ce96e0:  270.00 KiB | 1920 (1920) x   36 |        1 | 0x00000933
+0xf6ce9780:  540.00 KiB | 1920 (1920) x   72 |        1 | 0x00000933
+0xf6ce98c0:  270.00 KiB | 1920 (1920) x   36 |        1 | 0x00000933
+0xf6ce9a00:  540.00 KiB | 1920 (1920) x   72 |        1 | 0x00000933
+Total allocated (estimate): 62512.50 KB

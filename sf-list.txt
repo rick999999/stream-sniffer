@@ -1,0 +1,9 @@
+com.android.systemui.ImageWallpaper
+DimLayer
+SurfaceView
+DimLayer
+com.example.mediaplayercctest/com.example.mediaplayercctest.MainActivity
+FocusedStackFrame
+InputMethod
+StatusBar
+NavigationBar
